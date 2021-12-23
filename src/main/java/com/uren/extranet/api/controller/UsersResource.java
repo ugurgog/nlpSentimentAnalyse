@@ -1,5 +1,7 @@
 package com.uren.extranet.api.controller;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,20 @@ public class UsersResource {
     	Users addedUser = userRepository.save(users);
     	
     	return new ResponseEntity<>(addedUser, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value="/getUser", method=RequestMethod.POST)
+	@ResponseBody
+    public ResponseEntity<?> getUser(@RequestParam("id") int id) {
+    	
+    	Optional<Users> addedUser = userRepository.findById(id);
+    	
+    	if(addedUser.isPresent()) {
+    		Users user = addedUser.get();
+    		return new ResponseEntity<>(user, HttpStatus.OK);
+    	}
+    	
+    	return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
   
 }
