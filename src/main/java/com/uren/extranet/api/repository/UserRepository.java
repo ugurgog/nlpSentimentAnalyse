@@ -4,4 +4,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import com.uren.extranet.api.model.Users;
 
 public interface UserRepository extends MongoRepository<Users, Integer> {
+	
 }

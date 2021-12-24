@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
+import com.uren.extranet.api.impl.CustomUserRepository;
+import com.uren.extranet.api.model.BaseResponseModel;
 import com.uren.extranet.api.model.Users;
 import com.uren.extranet.api.repository.UserRepository;
 import com.uren.extranet.api.service.NextSequenceService;
@@ -27,20 +29,25 @@ public class UsersResource {
 	private Gson gson;
     private UserRepository userRepository;
     private NextSequenceService nextSequenceService;
+    private CustomUserRepository customUserRepository;
 
     @Autowired
-    public UsersResource(UserRepository userRepository, Gson gson, NextSequenceService nextSequenceService) {
+    public UsersResource(UserRepository userRepository, Gson gson, NextSequenceService nextSequenceService,
+    		CustomUserRepository customUserRepository) {
         this.userRepository = userRepository;
         this.gson = gson;
         this.nextSequenceService = nextSequenceService;
+        this.customUserRepository = customUserRepository;
     }
 
+    //**************** Get All Users **********************//
     @RequestMapping(value="/all", method=RequestMethod.GET)
 	@ResponseBody
     public ResponseEntity<?> getAll() {
     	return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
     }
     
+    //**************** Add User **********************//
     @RequestMapping(value="/addUser", method=RequestMethod.POST)
 	@ResponseBody
     public ResponseEntity<?> addUser(@RequestParam("name") String name,
@@ -58,6 +65,7 @@ public class UsersResource {
     	return new ResponseEntity<>(addedUser, HttpStatus.OK);
     }
     
+    //**************** Update User **********************//
     @RequestMapping(value="/updateUser", method=RequestMethod.POST)
 	@ResponseBody
     public ResponseEntity<?> updateUser(@RequestParam("id") int id, 
@@ -74,6 +82,7 @@ public class UsersResource {
     	return new ResponseEntity<>(addedUser, HttpStatus.OK);
     }
     
+    //**************** get User **********************//
     @RequestMapping(value="/getUser", method=RequestMethod.POST)
 	@ResponseBody
     public ResponseEntity<?> getUser(@RequestParam("id") int id) {
@@ -86,6 +95,21 @@ public class UsersResource {
     	}
     	
     	return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+    
+  //**************** Update User Salary **********************//
+    @RequestMapping(value="/updateUserSalary", method=RequestMethod.POST)
+	@ResponseBody
+    public ResponseEntity<?> updateUserSalary(@RequestParam("id") int id, 
+                                           @RequestParam("salary") String salary) {
+    	
+    	BaseResponseModel result = customUserRepository.updateUserSalary(id, Long.parseLong(salary));
+    	
+    	if(result.isSuccess()) {
+    		return getUser(id);
+    	}
+    	
+    	return new ResponseEntity<>(result, HttpStatus.OK);
     }
   
 }
