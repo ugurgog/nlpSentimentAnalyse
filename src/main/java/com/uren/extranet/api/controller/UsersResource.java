@@ -58,7 +58,7 @@ public class UsersResource {
     			name, teamName, salary);
     	
     	Users users = new Users(name, teamName, Long.parseLong(salary));
-    	users.setId((int)nextSequenceService.generateSequence(Users.SEQUENCE_NAME));
+    	//users.setId((int)nextSequenceService.generateSequence(Users.SEQUENCE_NAME));
     	
     	Users addedUser = userRepository.save(users);
     	
